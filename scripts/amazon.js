@@ -1,7 +1,8 @@
-let productsHTML = ' ';
+let productHTML = ' ';
 
 products.forEach((product) => {
-    productsHTML = productsHTML + `
+  productHTML = productHTML + `
+  
         <div class="product-container">
           <div class="product-image-container">
             <img class="product-image"
@@ -46,14 +47,51 @@ products.forEach((product) => {
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary js-add-to-cart"  value="${product.id}">
             Add to Cart
           </button>
         </div>
-    `;
-
-    console.log(productsHTML);
+      `;
 });
 
 
-document.querySelector('.js-producs-grid').innerHTML = productsHTML;
+document.querySelector('.js-producs-grid').innerHTML = productHTML;
+
+const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+let cartBtns = document.querySelectorAll('.js-add-to-cart');
+
+  
+  cartBtns.forEach((cartBtn) => {
+    cartBtn.addEventListener('click' , () => {
+    
+      let cartQuantity = 1;
+      let pId = cartBtn.value;
+
+      const selectedProduct = products.find((product) => {
+        return product.id === pId;
+      });
+
+      const result = cartItems.find((cartItem) => {
+        return cartItem.id === pId;
+      });
+
+      if(result){
+        result.quantity += 1;
+      }else{
+        const cartItem = {
+        ...selectedProduct,
+        quantity: cartQuantity
+      };
+
+      cartItems.push(cartItem);
+      }
+
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    });
+  });
+ 
+
+
+
+
+const searchBar = document.querySelector(".search-bar");
